@@ -1,0 +1,84 @@
+on charger
+    # hq log
+    setprop debug.charger.on 1
+    #hqlog
+    start getpersistlog
+
+service getaplog /system/bin/getlog -c
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+service stopaplog /system/bin/getlog -s
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+on property:persist.sys.debug.getaplog=1
+    restart getaplog
+
+on property:persist.sys.debug.getaplog=0
+    start stopaplog
+
+service  getqxdmlog /system/bin/getlog -q
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+service  stopqxdmlog /system/bin/getlog -x
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+on property:persist.sys.debug.getqxdmlog=1
+    restart getqxdmlog
+on property:persist.sys.debug.getqxdmlog=0
+    start stopqxdmlog
+
+service  cpanrlog  /system/bin/sh /system/etc/cpanrlog.sh
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+service  cptomblog  /system/bin/sh /system/etc/cptomblog.sh
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+service  gettcpdumplog /system/bin/getlog -t
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+service  stoptcpdumplog /system/bin/getlog -p
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+service  getpersistlog /system/bin/getpersistlog
+    class main
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+
+on property:persist.sys.debug.gettcpdump=1
+    restart gettcpdumplog
+on property:persist.sys.debug.gettcpdump=0
+    start stoptcpdumplog
+
+service getalllog /system/bin/sh /system/etc/getalllog.sh
+    disabled
+    user shell
+    oneshot
+    seclabel u:r:logoem:s0
+on property:persist.sys.debug.getalllog=1
+    restart getalllog
+on property:persist.sys.debug.getalllog=0
+    stop getalllog

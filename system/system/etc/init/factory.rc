@@ -1,0 +1,6 @@
+#
+# factory test rc
+#
+on property:gsm.sim.state=*
+   setprop vendor.gsm.sim.state ${gsm.sim.state}
+
